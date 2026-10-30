@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Prota : MonoBehaviour
 {
@@ -11,12 +12,16 @@ public class Prota : MonoBehaviour
     private float playerMov;
     //private bool estaSaltando = false;
     private bool estaMuerto = false;
+    public Canvas gameover;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-            rb = GetComponent<Rigidbody2D>();
+        
+        gameover.enabled = false;
+        Time.timeScale = 1;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -27,6 +32,14 @@ public class Prota : MonoBehaviour
         Animaciones();
         Salto();
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Morir();
+        }
+    }
+
     void Movimiento()
     {
         playerMov = Input.GetAxisRaw("Horizontal");
@@ -75,9 +88,14 @@ public class Prota : MonoBehaviour
 
     void Morir()
     {
+        Debug.Log("Murio");
         estaMuerto = true;
-        rb.linearVelocity = Vector3.zero;
+        //rb.linearVelocity = Vector3.zero;
         animator.SetTrigger("Morir");
+        gameover.enabled = true;
+        Time.timeScale = 0;
+
+
     }
 
 }
